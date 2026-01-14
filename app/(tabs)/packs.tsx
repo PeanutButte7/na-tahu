@@ -1,11 +1,13 @@
 import { getAllPacks } from '@/lib/game';
 import { useAppStore } from '@/store/useAppStore';
+import { usePackStore } from '@/store/usePackStore';
 import { ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PacksScreen() {
   const { ownedPackIds, unlockedAll, setUnlockedAll } = useAppStore();
-  const allPacks = getAllPacks();
+  const remotePacks = usePackStore((state) => state.packs);
+  const allPacks = remotePacks ?? getAllPacks();
   
   const isOwned = (id: string) =>  unlockedAll || ownedPackIds.includes(id);
 

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import '../global.css';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { usePackStore } from '@/store/usePackStore';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,6 +48,11 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const loadRemotePacks = usePackStore((state) => state.loadRemotePacks);
+
+  useEffect(() => {
+    loadRemotePacks();
+  }, [loadRemotePacks]);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>

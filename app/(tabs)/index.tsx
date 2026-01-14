@@ -1,4 +1,5 @@
 import { getAllPacks } from '@/lib/game';
+import { usePackStore } from '@/store/usePackStore';
 import { useAppStore } from '@/store/useAppStore';
 import { useGameStore } from '@/store/useGameStore';
 import { useRouter } from 'expo-router';
@@ -9,7 +10,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const ownedPackIds = useAppStore((state) => state.ownedPackIds);
   const session = useGameStore((state) => state.session);
-  const allPacks = getAllPacks();
+  const remotePacks = usePackStore((state) => state.packs);
+  const allPacks = remotePacks ?? getAllPacks();
   const myPacks = allPacks.filter((p) => ownedPackIds.includes(p.id));
 
   return (

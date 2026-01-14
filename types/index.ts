@@ -9,6 +9,21 @@ export interface Pack {
 export interface Question {
   id: string;
   text: string;
+  correctAnswers: string[];
+  wrongAnswers: string[];
+}
+
+export interface LegacyPack {
+  id: string;
+  name: string;
+  description: string;
+  priceDisplay: string;
+  questions: LegacyQuestion[];
+}
+
+export interface LegacyQuestion {
+  id: string;
+  text: string;
   options: string[];
   correctIndices: number[];
 }

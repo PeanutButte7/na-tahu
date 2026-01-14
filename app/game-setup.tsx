@@ -1,6 +1,7 @@
 import { getAllPacks, getQuestionsForPacks, shuffleArray } from '@/lib/game';
 import { useAppStore } from '@/store/useAppStore';
 import { useGameStore } from '@/store/useGameStore';
+import { usePackStore } from '@/store/usePackStore';
 import { FontAwesome } from '@expo/vector-icons';
 import clsx from 'clsx';
 import { useRouter } from 'expo-router';
@@ -13,8 +14,9 @@ export default function GameSetupScreen() {
   const startSession = useGameStore((state) => state.startSession);
   const ownedPackIds = useAppStore((state) => state.ownedPackIds);
   const unlockedAll = useAppStore((state) => state.unlockedAll);
-  
-  const allPacks = getAllPacks();
+
+  const remotePacks = usePackStore((state) => state.packs);
+  const allPacks = remotePacks ?? getAllPacks();
   const availablePacks = allPacks.filter(p => unlockedAll || ownedPackIds.includes(p.id));
 
   const [playerCount, setPlayerCount] = useState(2);
@@ -51,7 +53,7 @@ export default function GameSetupScreen() {
       return;
     }
 
-    const questions = getQuestionsForPacks(selectedPacks);
+    const questions = getQuestionsForPacks(selectedPacks, allPacks);
     if (questions.length === 0) {
          Alert.alert("Error", "Selected packs have no questions.");
          return;

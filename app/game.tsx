@@ -1,9 +1,10 @@
-import { getQuestionsForPacks } from '@/lib/game';
+import { buildRoundOptions, getQuestionsForPacks } from '@/lib/game';
 import { useGameStore } from '@/store/useGameStore';
+import { usePackStore } from '@/store/usePackStore';
 import { Ionicons } from '@expo/vector-icons';
 import clsx from 'clsx';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, BackHandler, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,6 +14,7 @@ export default function GameScreen() {
     const updateScore = useGameStore(state => state.updateCurrentPlayerScore);
     const nextTurn = useGameStore(state => state.nextTurn);
     const endSession = useGameStore(state => state.endSession);
+    const remotePacks = usePackStore((state) => state.packs);
 
     // New State for "Instant Evaluation" & "Push Your Luck"
     const [revealedIndices, setRevealedIndices] = useState<number[]>([]); // Indices of correctly found answers
@@ -69,11 +71,21 @@ export default function GameScreen() {
     const questionId = session.questionQueue[session.currentQuestionIndex % session.questionQueue.length]; 
     
     // Dynamically get questions for the selected packs
-    const questionsData = getQuestionsForPacks(session.selectedPackIds);
+    const questionsData = getQuestionsForPacks(session.selectedPackIds, remotePacks ?? undefined);
     const question = questionsData.find(q => q.id === questionId);
 
     if (!question) {
         return <View className="flex-1 bg-gray-50 justify-center items-center"><Text className="text-gray-900">Error: Question not found</Text></View>;
+    }
+
+    const round = useMemo(() => buildRoundOptions(question), [questionId]);
+
+    if (!round) {
+        return (
+            <View className="flex-1 bg-gray-50 justify-center items-center">
+                <Text className="text-gray-900">Error: Question needs at least 5 correct and 5 wrong answers.</Text>
+            </View>
+        );
     }
 
     const handleOptionClick = (idx: number) => {
@@ -87,7 +99,7 @@ export default function GameScreen() {
             // But we can't access updated wrongIndex in this callback easily if it's changing simultaneously.
             // However, usually one click sets one or the other.
             
-            const isCorrect = question.correctIndices.includes(idx);
+            const isCorrect = round.correctIndices.includes(idx);
             
             if (isCorrect) {
                  const newRevealed = [...prev, idx];
@@ -255,7 +267,7 @@ export default function GameScreen() {
                  </Text>
 
                  <View className="flex-row flex-wrap justify-between pb-10">
-                     {question.options.map((opt, idx) => {
+                     {round.options.map((opt, idx) => {
                          // Determine styles based on state
                          const isRevealed = revealedIndices.includes(idx);
                          const isWrong = wrongIndex === idx;
@@ -275,7 +287,7 @@ export default function GameScreen() {
                          } else if (effectiveRoundOver) {
                             // If round is over (banked or lost or won), do we show correct answers?
                             // Usually in these games yes, we show what was missed.
-                            if (question.correctIndices.includes(idx)) {
+                            if (round.correctIndices.includes(idx)) {
                                  // Missed correct option
                                  cardClass = "w-[48%] bg-white p-3 mb-3 rounded-xl border-2 border-emerald-500/30 items-center justify-center min-h-[70px] shadow-sm";
                                  textClass = "text-emerald-600 opacity-60 text-center font-bold text-sm";

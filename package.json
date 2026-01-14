@@ -6,7 +6,12 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "admin:dev": "npm --prefix apps/admin run dev",
+    "admin:build": "npm --prefix apps/admin run build",
+    "admin:start": "npm --prefix apps/admin run start",
+    "seed:supabase": "node scripts/seed-supabase.mjs",
+    "supabase:setup": "psql \"$SUPABASE_DB_URL\" -f supabase/schema.sql && node scripts/seed-supabase.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "~14.0.4",
@@ -22,6 +27,7 @@
     "expo-splash-screen": "~0.29.0",
     "expo-status-bar": "~2.0.0",
     "expo-web-browser": "~14.0.0",
+    "@supabase/supabase-js": "^2.49.1",
     "nativewind": "^4.2.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",

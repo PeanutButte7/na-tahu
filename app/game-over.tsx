@@ -1,5 +1,6 @@
 import { getQuestionsForPacks, shuffleArray } from '@/lib/game';
 import { useGameStore } from '@/store/useGameStore';
+import { usePackStore } from '@/store/usePackStore';
 import { useRouter } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +10,7 @@ export default function GameOverScreen() {
     const session = useGameStore(state => state.session);
     const lastSetup = useGameStore(state => state.lastSetup);
     const startSession = useGameStore(state => state.startSession);
+    const remotePacks = usePackStore((state) => state.packs);
 
     if (!session) {
         return (
@@ -27,7 +29,7 @@ export default function GameOverScreen() {
     const handlePlayAgain = () => {
         if (!lastSetup) return router.replace('/game-setup');
 
-        const questions = getQuestionsForPacks(lastSetup.selectedPackIds);
+        const questions = getQuestionsForPacks(lastSetup.selectedPackIds, remotePacks ?? undefined);
         const questionIds = questions.map(q => q.id);
         const shuffledQ = shuffleArray(questionIds);
 
