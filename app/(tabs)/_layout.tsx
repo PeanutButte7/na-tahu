@@ -1,13 +1,9 @@
-import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { Tabs } from 'expo-router';
+import React from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -16,42 +12,75 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        tabBarActiveTintColor: '#10B981', // Emerald-600
+        tabBarStyle: {
+            position: 'absolute',
+            bottom: 24,
+            left: 20,
+            right: 20,
+            height: 64,
+            borderRadius: 32,
+            backgroundColor: 'transparent',
+            borderTopWidth: 0,
+            elevation: 0,
+            paddingBottom: 0,
+            overflow: 'hidden',
+        },
+        tabBarBackground: () => (
+            <View
+                style={{
+                    ...StyleSheet.absoluteFillObject,
+                    borderRadius: 32,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                        width: 0,
+                        height: 12,
+                    },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 24,
+                    elevation: 8,
+                }}
+            >
+                <BlurView
+                    intensity={Platform.OS === 'ios' ? 95 : 85}
+                    tint="light"
+                    experimentalBlurMethod="none"
+                    style={{
+                        ...StyleSheet.absoluteFillObject,
+                        borderRadius: 32,
+                        overflow: 'hidden',
+                        backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.4)',
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                    }}
+                />
+            </View>
+        ),
+        headerShown: false,
+        tabBarShowLabel: false,
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: 'Home',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="packs"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Store',
+          tabBarIcon: ({ color }) => <TabBarIcon name="shopping-bag" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
         }}
       />
     </Tabs>

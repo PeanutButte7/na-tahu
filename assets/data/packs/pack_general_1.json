@@ -1,0 +1,26 @@
+{
+  "id": "pack_general_1",
+  "name": "General Knowledge",
+  "description": "Test your general awareness.",
+  "priceDisplay": "Owned",
+  "questions": [
+    {
+      "id": "q_gen_1",
+      "text": "Select 5 mammals.",
+      "options": ["Dog", "Lizard", "Cat", "Eagle", "Whale", "Frog", "Human", "Shark", "Bat", "Ant"],
+      "correctIndices": [0, 2, 4, 6, 8]
+    },
+    {
+      "id": "q_gen_2",
+      "text": "Select 5 fruits.",
+      "options": ["Carrot", "Apple", "Potato", "Banana", "Onion", "Orange", "Spinach", "Grape", "Corn", "Pear"],
+      "correctIndices": [1, 3, 5, 7, 9]
+    },
+    {
+      "id": "q_gen_3",
+      "text": "Select 5 prime numbers.",
+      "options": ["1", "2", "4", "3", "6", "5", "8", "7", "9", "11"],
+      "correctIndices": [1, 3, 5, 7, 9]
+    }
+  ]
+}

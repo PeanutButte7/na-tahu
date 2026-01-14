@@ -1,0 +1,26 @@
+{
+  "id": "pack_geo_1",
+  "name": "Geography Basics",
+  "description": "Countries, cities, and landmarks.",
+  "priceDisplay": "Owned",
+  "questions": [
+    {
+      "id": "q_geo_1",
+      "text": "Select 5 European capitals.",
+      "options": ["Paris", "Tokyo", "Berlin", "Beijing", "Madrid", "Canberra", "Rome", "Ottawa", "London", "Washington DC"],
+      "correctIndices": [0, 2, 4, 6, 8]
+    },
+    {
+      "id": "q_geo_2",
+      "text": "Select 5 rivers.",
+      "options": ["Pacific", "Nile", "Atlantic", "Amazon", "Sahara", "Mississippi", "Everest", "Yangtze", "K2", "Danube"],
+      "correctIndices": [1, 3, 5, 7, 9]
+    },
+    {
+      "id": "q_geo_3",
+      "text": "Select 5 US states.",
+      "options": ["Texas", "Toronto", "California", "London", "Florida", "Paris", "New York", "Moscow", "Ohio", "Dubai"],
+      "correctIndices": [0, 2, 4, 6, 8]
+    }
+  ]
+}
